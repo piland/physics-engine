@@ -2,18 +2,22 @@
 #include <SFML/Window.hpp>
 
 int main() {
-    // Vector2f data type is used to declare x and y value for size of window
+    const sf::Vector2u viewSize(1024.0f, 768.0f);
 
-    // VideoMode sets width and height of window, also gets the bits required for color representation and can alter resolutions
+    sf::RectangleShape rect(sf::Vector2f(400.0f, 200.0f));
+    rect.setFillColor(sf::Color::Red);
+    rect.setPosition(sf::Vector2f(viewSize.x / 2, viewSize.y / 2));
+    rect.setOrigin(sf::Vector2f(rect.getSize().x / 2, rect.getSize().y / 2));
 
-    //sf::style::Titlebar -> adds titlebar
-    //sf::style::Fullscreen -> creates a fullscreen mode
-    //sf::style::Default allows for resize, closing, and title
-
-    sf::RenderWindow window(sf::VideoMode({1024, 600}), "Ethan", sf::Style::Default);
+    sf::VideoMode vm({viewSize.x, viewSize.y});
+    sf::RenderWindow window(vm, "Ethan", sf::Style::Default);
 
     while (window.isOpen()) {
-        window.clear(sf::Color::White);
+        window.clear();
+        window.draw(rect);
+        while (const std::optional event = window.pollEvent()) {
+            if (event->is<sf::Event::Closed>()) window.close();
+        }
         window.display();
     }
 
